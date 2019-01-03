@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
+    <link href="./index.css" rel="stylesheet">      
+    <script type="text/javascript" src="./index.js"></script>
+
+    <title>Scratch</title>
+    <style>
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        .layout-row {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .layout-align-space-between {
+            justify-content: space-between;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: white;
+            border-right: solid 1px #f3f3f3;
+            padding: 24px;
+        }
+
+        .main-layout {
+            width: 100%;
+            padding: 24px;
+        }
+
+        .task {
+            padding: 16px;
+            border-bottom: solid 1px #f3f3f3;
+            transition: all 0.6s ease;
+        }
+
+        .task:hover {
+            background: #c3ccdd;
+            border-radius: 20px;
+        }
+
+        .task:last-child {
+            border-bottom: none;
+        }
+
+        .dt-sidebar {
+            background: #232836;
+            width: 85px;
+            min-width: 85px;
+            height: 100%;
+            color: #a4a6ab;
+        }
+
+        .dt-sidebar .button {
+            background: white;
+            border-radius: 4px;
+            margin: 16px auto;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #232836;
+            transition: all 0.3s ease;
+        }
+
+        .dt-sidebar .button:hover {
+            border-radius: 50%;
+        }
+
+        .logo {
+            background: url(https://drishti.com/wp-content/uploads/2018/04/drishti-logo-white.svg) no-repeat;
+            background-size: cover;
+            width: 40px;
+            height: 40px;
+            margin: 24px auto;
+        }
+
+        .container {
+            height: 100%;
+        }
+		.imageContainer {
+			width:110px;
+			height:60px;
+		}
+    </style>
+</head>
+<body>
+<div class="layout-row container">
+    <div class="sidebar">
+        <div class="layout-row layout-align-space-between">
+            <h2>
+                Task List
+            </h2>
+            <i class="material-icons">list</i>
+        </div>
+        <!--<div class="task">
+            Task 1
+        </div>
+        <div class="task">
+            Task 2
+        </div>
+        <div class="task">
+            Task 3
+        </div> -->
+        <div id="taskParent">
+
+        </div>
+    </div>
+    <div class="main-layout" id="main-layout">
+		<div id='childLayout'></div>
+		<div style='height:30px;width:60px;' id="submitNow">Submit</div></div> 
+    </div>
+</div>
+
+</body>
+</html>

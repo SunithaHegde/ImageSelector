@@ -1,0 +1,15 @@
+.imageContainer{
+  
+}
+
+.imageContainer:hover {
+  opacity: 0.5;
+}
+.highlightedImage
+{
+      -webkit-mask-image: linear-gradient(rgb(121, 21, 21), #2a117b08);
+      mask-image: linear-gradient(rgb(121, 21, 21), #2a117b08);
+}
+.hoverEffect{
+  opacity: 0.5;
+}
