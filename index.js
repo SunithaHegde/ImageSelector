@@ -226,14 +226,17 @@ class TaskApp {
 		this.taskList =[];
 		this.getTasksList().then((value) => {
 				let arr = JSON.parse(value.replace(/'/g, '"')); 
+				var documentFragment = document.createDocumentFragment();
+
 				arr.forEach((val) => {
 					var taskComponent = document.createElement('task-component');
 					taskComponent.id = `taskId_${val}`;
 					taskComponent.setMessage(val);
+					documentFragment.appendChild(taskComponent);
 					this.taskList = taskComponent.taskArr;
-					document.getElementById("taskParent").appendChild(taskComponent);
-					
 				});
+				document.getElementById("taskParent").appendChild(documentFragment);
+
 		});	
 	}	
 	getTasksList() {
@@ -273,17 +276,20 @@ class Task extends HTMLElement {
 		this.getImageListForTheTask(taskId).then((response) => {
 			document.getElementById("childLayout").innerHTML = "";
 			response = JSON.parse(response.replace(/'/g, '"'));
+			var documentFragment = document.createDocumentFragment();
+
 			response.forEach((val,index) => {
 				var imageComp = document.createElement('image-component');
 				imageComp.id = `image_${index}`;
 				imageComp.setSource("."+val);
-				document.getElementById("childLayout").appendChild(imageComp);
+				documentFragment.appendChild(imageComp);
 				imageComp.addEventListener("click", { 
 					handleEvent:this.imageHandler,
 					taskScope:this
 				}, false);
 
 			});
+			document.getElementById("childLayout").appendChild(documentFragment);
 		});
 	}
 	imageHandler(e){
