@@ -123,7 +123,7 @@ function setImageHeightWidthRatio(width,height){
   $(".imageContainer").css("height",height*7);
 
 }*/
-class Task {
+/*class Task {
 	constructor(){
 		this.startIndex = null;
 		this.endIndex = null;
@@ -219,4 +219,123 @@ class Task {
 	}	
 		
 }	
-var newTask = new Task();
+var newTask = new Task();*/
+
+class TaskApp {
+	constructor(){
+		this.taskList =[];
+		this.getTasksList().then((value) => {
+				let arr = JSON.parse(value.replace(/'/g, '"')); 
+				arr.forEach((val) => {
+					var taskComponent = document.createElement('task-component');
+					taskComponent.id = `taskId_${val}`;
+					taskComponent.setMessage(val);
+					this.taskList = taskComponent.taskArr;
+					document.getElementById("taskParent").appendChild(taskComponent);
+					
+				});
+		});	
+	}	
+	getTasksList() {
+		return new Promise((resolve,reject) => {
+				const HTTP = new XMLHttpRequest();
+				HTTP.open("GET","http://localhost:3000/api/v1/tasks");
+				HTTP.send();
+				HTTP.onreadystatechange = (e) => {
+					if (HTTP.readyState == 4 && HTTP.status == 200) {
+						resolve(HTTP.responseText);
+					}	
+				}
+		}); 
+	}	
+	
+}	
+
+class Task extends HTMLElement {
+	createdCallback() {
+		this.innerHTML = `<div class="task" ></div>`;
+		this.taskComponent = this.querySelector('.task');
+		this.taskComponent.addEventListener('click', () => this.clickHandlerTask(this.taskComponent.textContent));
+		this.startIndex = null;
+		this.endIndex = null;
+		this.taskArr = [];
+		document.getElementById("submitNow").addEventListener('click',{
+			handleEvent:this.makePostCall,
+			taskComponent:this
+		});
+	}
+			
+	setMessage(val){
+		this.taskComponent.textContent = val;
+	}	
+	clickHandlerTask(taskId) {
+		var taskScope = this;
+		this.getImageListForTheTask(taskId).then((response) => {
+			document.getElementById("childLayout").innerHTML = "";
+			response = JSON.parse(response.replace(/'/g, '"'));
+			response.forEach((val,index) => {
+				var imageComp = document.createElement('image-component');
+				imageComp.id = `image_${index}`;
+				imageComp.setSource("."+val);
+				document.getElementById("childLayout").appendChild(imageComp);
+				imageComp.addEventListener("click", { 
+					handleEvent:this.imageHandler,
+					taskScope:this
+				}, false);
+
+			});
+		});
+	}
+	imageHandler(e){
+		if(this.taskScope.startIndex == null) {
+			this.taskScope.startIndex = e.currentTarget;
+		} else {
+			this.taskScope.endIndex = e.currentTarget;
+			let tempNode = this.taskScope.startIndex;
+			while(!tempNode.isSameNode(this.taskScope.endIndex)){
+				this.taskScope.taskArr.push(tempNode.getElementsByTagName("img")[0].getAttribute("src"));
+				tempNode = tempNode.nextElementSibling;
+			}	
+			console.log(this.taskScope.taskArr)
+			this.taskScope.startIndex = null;
+			this.taskScope.endIndex = null;
+		}
+	
+	}	
+	getImageListForTheTask(taskId) {
+		return new Promise((resolve,reject) => {
+				const HTTP = new XMLHttpRequest();
+				HTTP.open("GET",`http://localhost:3000/api/v1/task?id=${taskId}`);
+				HTTP.send();
+				HTTP.onreadystatechange = (e) => {
+					if (HTTP.readyState == 4 && HTTP.status == 200) {
+						resolve(HTTP.responseText);
+					}	
+				}
+		});
+	}	
+	makePostCall(){
+		const HTTP = new XMLHttpRequest();
+		HTTP.open("POST","http://localhost:3000/api/v1/task");
+		HTTP.send();
+		HTTP.onreadystatechange = (e) => {
+			if (HTTP.readyState == 4 && HTTP.status == 200) {
+				console.log("Posted");
+				this.taskArr = [];
+			}	
+		}
+	}	
+			
+}	
+class Images extends HTMLElement {
+	createdCallback() {
+		this.innerHTML = `<img class='imageContainer' />`
+		this.imageComp = this.querySelector('.imageContainer');
+	}
+	setSource(val){
+		this.imageComp.setAttribute("src",val);
+	}	
+}	
+document.registerElement('task-component', Task);
+document.registerElement('image-component', Images);
+var newTaskApp = new TaskApp();
